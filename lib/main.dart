@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+final Uri _url = Uri.parse('https://www.youtube.com/watch?v=1VlkcdXIKXw');
 
 void main() {
   runApp(MyApp());
@@ -9,43 +11,54 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Share Plus 10.1.2',
-      home: SharePlus(),
+      title: 'URL Launcher',
+      home: HomeScreen(),
     );
   }
 }
 
-class SharePlus extends StatelessWidget {
-  void _shareText() {
-    Share.share('This App Showcases SharePlus Plugin');
+class HomeScreen extends StatelessWidget {
+  void _launchUrl() async {
+    if (!await launchUrl(_url)) {
+      throw 'Could not launch $_url';
+    }
   }
-  void _shareUrl() {
-    Share.share('Listen to This Song: www.youtube.com/watch?v=P6NYkUeBoGQ&t');
+
+  void _sendEmail() async {
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: 'venedict.cortez@gmail.com',
+      query: 'Test',
+    );
+
+    if (!await launchUrl(emailUri)) {
+      throw 'Could not send email';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Share Plus Example'),
+        title: const Text('URL Launcher'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'This App showcases the Share Text and URL using Share Plus Package',
-                  style: TextStyle(
-          fontSize: 12,
-        ),
+              'Flutter Plugin For Launching URL',
+              style: TextStyle(
+                fontSize: 12,
+              ),
             ),
             ElevatedButton(
-              onPressed: _shareText,
-              child: Text('Share Text'),
+              onPressed: _launchUrl,
+              child: const Text('Open URL'),
             ),
             ElevatedButton(
-              onPressed: _shareUrl,
-              child: Text('Share URL'),
+              onPressed: _sendEmail,
+              child: const Text('Send Email'),
             ),
           ],
         ),
